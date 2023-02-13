@@ -9,7 +9,7 @@ SwiftUI Down Tapped
 ![Badge - License](https://img.shields.io/badge/license-MIT-black?style=flat-square)  
 ---
 
-```
+```swift
 struct DownTapGestureExample: View {
   @State private var location: CGPoint = .zero
   
