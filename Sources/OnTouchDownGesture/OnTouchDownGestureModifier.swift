@@ -11,8 +11,7 @@ extension View {
   /// Adds an action to perform when this view recognizes a tap gesture,
   /// and provides the action with the location of the interaction.
   ///
-  /// Use this method to perform the specified `action` when the user clicks
-  /// or taps on the modified view `count` times. The action closure receives
+  /// The action closure receives
   /// the location of the interaction.
   ///
   /// > Note: If you create a control that's functionally equivalent
@@ -36,17 +35,15 @@ extension View {
   ///     }
   ///
   /// - Parameters:
-  ///    - count: The number of taps or clicks required to trigger the action
-  ///      closure provided in `action`. Defaults to `1`.
   ///    - coordinateSpace: The coordinate space in which to receive
   ///      location values. Defaults to ``CoordinateSpace/local``.
   ///    - action: The action to perform. This closure receives an input
   ///      that indicates where the interaction occurred.
-  public func onTouchDownGesture(count: Int = 1,
-                                 coordinateSpace: CoordinateSpace = .local,
+  @available(iOS 13.0, macOS 10.15, watchOS 6.0, *)
+  @available(tvOS, unavailable)
+  public func onTouchDownGesture(coordinateSpace: CoordinateSpace = .local,
                                  perform action: @escaping (CGPoint) -> Void) -> some View {
-    modifier(OnTouchDownGestureModifier(count: count,
-                                        coordinateSpace: coordinateSpace,
+    modifier(OnTouchDownGestureModifier(coordinateSpace: coordinateSpace,
                                         perform: action))
   }
 }
@@ -55,17 +52,11 @@ fileprivate struct OnTouchDownGestureModifier: ViewModifier {
   @State
   private var isTapped = false
   
-  @State
-  private var tapCount = 0
-  
-  private let count: Int
   private let coordinateSpace: CoordinateSpace
   private let perform: (CGPoint) -> Void
   
-  fileprivate init(count: Int = 1,
-              coordinateSpace: CoordinateSpace = .local,
-              perform: @escaping (CGPoint) -> Void) {
-    self.count = count
+  fileprivate init(coordinateSpace: CoordinateSpace = .local,
+                   perform: @escaping (CGPoint) -> Void) {
     self.coordinateSpace = coordinateSpace
     self.perform = perform
   }
@@ -75,14 +66,10 @@ fileprivate struct OnTouchDownGestureModifier: ViewModifier {
       .simultaneousGesture(DragGesture(minimumDistance: 0,
                                        coordinateSpace: coordinateSpace)
         .onChanged { touch in
-          tapCount += 1
+          guard !self.isTapped else { return }
           
-          if count == tapCount {
-            if !self.isTapped {
-              self.isTapped = true
-              self.perform(touch.location)
-            }
-          }
+          self.isTapped = true
+          self.perform(touch.location)
         }
         .onEnded { _ in
           self.isTapped = false
