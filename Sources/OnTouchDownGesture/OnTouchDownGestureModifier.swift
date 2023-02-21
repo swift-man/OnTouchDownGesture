@@ -35,16 +35,13 @@ extension View {
   ///     }
   ///
   /// - Parameters:
-  ///    - coordinateSpace: The coordinate space in which to receive
-  ///      location values. Defaults to ``CoordinateSpace/local``.
   ///    - action: The action to perform. This closure receives an input
   ///      that indicates where the interaction occurred.
-  @available(iOS 13.0, macOS 10.15, watchOS 6.0, *)
+  @available(iOS 13.0, macOS 12.0, *)
+  @available(watchOS, unavailable)
   @available(tvOS, unavailable)
-  public func onTouchDownGesture(coordinateSpace: CoordinateSpace = .local,
-                                 perform action: @escaping (CGPoint) -> Void) -> some View {
-    modifier(OnTouchDownGestureModifier(coordinateSpace: coordinateSpace,
-                                        perform: action))
+  public func onTouchDownGesture(perform action: @escaping (CGPoint) -> Void) -> some View {
+    modifier(OnTouchDownGestureModifier(perform: action))
   }
 }
 
@@ -52,27 +49,30 @@ fileprivate struct OnTouchDownGestureModifier: ViewModifier {
   @State
   private var isTapped = false
   
-  private let coordinateSpace: CoordinateSpace
   private let perform: (CGPoint) -> Void
   
-  fileprivate init(coordinateSpace: CoordinateSpace = .local,
-                   perform: @escaping (CGPoint) -> Void) {
-    self.coordinateSpace = coordinateSpace
+  fileprivate init(perform: @escaping (CGPoint) -> Void) {
     self.perform = perform
   }
   
   fileprivate func body(content: Content) -> some View {
     content
-      .simultaneousGesture(DragGesture(minimumDistance: 0,
-                                       coordinateSpace: coordinateSpace)
-        .onChanged { touch in
-          guard !self.isTapped else { return }
-          
-          self.isTapped = true
-          self.perform(touch.location)
-        }
-        .onEnded { _ in
-          self.isTapped = false
-        })
+      .overlay(content: {
+        DownTapGesture(performAction: perform)
+      })
   }
+}
+
+struct DownTapGesture {
+  let performAction: (CGPoint) -> Void
+  let downTapCoordniator = DownTapCoordniator()
+  
+  func makeCoordinator() -> DownTapCoordniator {
+    downTapCoordniator.performAction = performAction
+    return downTapCoordniator
+  }
+}
+
+final class DownTapCoordniator {
+  var performAction: ((CGPoint) -> Void)?
 }
