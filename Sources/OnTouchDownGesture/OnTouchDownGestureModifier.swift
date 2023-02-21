@@ -37,7 +37,7 @@ extension View {
   /// - Parameters:
   ///    - action: The action to perform. This closure receives an input
   ///      that indicates where the interaction occurred.
-  @available(iOS 13.0, macOS 12.0, *)
+  @available(iOS 15.0, macOS 12.0, *)
   @available(watchOS, unavailable)
   @available(tvOS, unavailable)
   public func onTouchDownGesture(perform action: @escaping (CGPoint) -> Void) -> some View {
