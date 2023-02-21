@@ -44,32 +44,3 @@ extension View {
     modifier(OnTouchDownGestureModifier(perform: action))
   }
 }
-
-fileprivate struct OnTouchDownGestureModifier: ViewModifier {
-  private let perform: (CGPoint) -> Void
-  
-  fileprivate init(perform: @escaping (CGPoint) -> Void) {
-    self.perform = perform
-  }
-  
-  fileprivate func body(content: Content) -> some View {
-    content
-      .overlay(content: {
-        DownTapGesture(performAction: perform)
-      })
-  }
-}
-
-internal struct DownTapGesture {
-  internal let performAction: (CGPoint) -> Void
-  internal let downTapCoordniator = DownTapCoordniator()
-  
-  internal func makeCoordinator() -> DownTapCoordniator {
-    downTapCoordniator.performAction = performAction
-    return downTapCoordniator
-  }
-}
-
-internal final class DownTapCoordniator {
-  var performAction: ((CGPoint) -> Void)?
-}

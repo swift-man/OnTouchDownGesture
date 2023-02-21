@@ -33,16 +33,16 @@ extension DownTapCoordniator {
   }
 }
 
-fileprivate final class UITouchDownGestureRecognizer: UIGestureRecognizer {
-  fileprivate override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+internal final class UITouchDownGestureRecognizer: UIGestureRecognizer {
+  internal override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
     if self.state == .possible {
       self.state = .recognized
     }
   }
-  fileprivate override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+  internal override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
     self.state = .failed
   }
-  fileprivate override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+  internal override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
     self.state = .failed
   }
 }
