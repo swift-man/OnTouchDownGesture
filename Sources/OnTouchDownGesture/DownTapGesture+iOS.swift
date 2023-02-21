@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 
 extension DownTapGesture: UIViewRepresentable {
-  func makeUIView(context: Context) -> UIView {
+  internal func makeUIView(context: Context) -> UIView {
     let view = UIView()
     let gesture = UITouchDownGestureRecognizer(
       target: downTapCoordniator,
@@ -20,12 +20,12 @@ extension DownTapGesture: UIViewRepresentable {
     return view
   }
   
-  func updateUIView(_ uiView: UIView, context: Context) {}
+  internal func updateUIView(_ uiView: UIView, context: Context) {}
 }
 
 extension DownTapCoordniator {
   @objc
-  func tapped(sender: UITouchDownGestureRecognizer) {
+  internal func tapped(sender: UITouchDownGestureRecognizer) {
     if sender.state == .ended {
       let point = sender.location(in: sender.view)
       performAction?(point)
@@ -34,15 +34,15 @@ extension DownTapCoordniator {
 }
 
 fileprivate final class UITouchDownGestureRecognizer: UIGestureRecognizer {
-  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+  fileprivate override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
     if self.state == .possible {
       self.state = .recognized
     }
   }
-  override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+  fileprivate override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
     self.state = .failed
   }
-  override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+  fileprivate override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
     self.state = .failed
   }
 }

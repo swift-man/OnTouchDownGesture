@@ -46,9 +46,6 @@ extension View {
 }
 
 fileprivate struct OnTouchDownGestureModifier: ViewModifier {
-  @State
-  private var isTapped = false
-  
   private let perform: (CGPoint) -> Void
   
   fileprivate init(perform: @escaping (CGPoint) -> Void) {
@@ -63,16 +60,16 @@ fileprivate struct OnTouchDownGestureModifier: ViewModifier {
   }
 }
 
-struct DownTapGesture {
-  let performAction: (CGPoint) -> Void
-  let downTapCoordniator = DownTapCoordniator()
+internal struct DownTapGesture {
+  internal let performAction: (CGPoint) -> Void
+  internal let downTapCoordniator = DownTapCoordniator()
   
-  func makeCoordinator() -> DownTapCoordniator {
+  internal func makeCoordinator() -> DownTapCoordniator {
     downTapCoordniator.performAction = performAction
     return downTapCoordniator
   }
 }
 
-final class DownTapCoordniator {
+internal final class DownTapCoordniator {
   var performAction: ((CGPoint) -> Void)?
 }

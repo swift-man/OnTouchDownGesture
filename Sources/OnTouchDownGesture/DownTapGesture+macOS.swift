@@ -10,7 +10,7 @@ import SwiftUI
 import Cocoa
 
 extension DownTapGesture: NSViewRepresentable {
-  func makeNSView(context: Context) -> NSView {
+  internal func makeNSView(context: Context) -> NSView {
     let button = NSButton()
     
     button.target = downTapCoordniator
@@ -26,7 +26,7 @@ extension DownTapGesture: NSViewRepresentable {
 
 extension DownTapCoordniator {
   @objc
-  func tapped(sender: NSButton) {
+  internal func tapped(sender: NSButton) {
     guard
       let window = sender.window
     else { return }
