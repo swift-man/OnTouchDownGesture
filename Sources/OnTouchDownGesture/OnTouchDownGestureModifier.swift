@@ -63,8 +63,8 @@ fileprivate struct OnTouchDownGestureModifier: ViewModifier {
   
   fileprivate func body(content: Content) -> some View {
     content
-      .simultaneousGesture(DragGesture(minimumDistance: 0,
-                                       coordinateSpace: coordinateSpace)
+      .gesture(DragGesture(minimumDistance: 0,
+                           coordinateSpace: coordinateSpace)
         .onChanged { touch in
           guard !self.isTapped else { return }
           
@@ -74,5 +74,6 @@ fileprivate struct OnTouchDownGestureModifier: ViewModifier {
         .onEnded { _ in
           self.isTapped = false
         })
+      .disabled(isTapped)
   }
 }
