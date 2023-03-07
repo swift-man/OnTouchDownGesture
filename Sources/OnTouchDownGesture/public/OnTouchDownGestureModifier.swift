@@ -35,8 +35,6 @@ extension View {
   ///     }
   ///
   /// - Parameters:
-  ///    - coordinateSpace: The coordinate space in which to receive
-  ///      location values. Defaults to ``CoordinateSpace/local``.
   ///    - action: The action to perform. This closure receives an input
   ///      that indicates where the interaction occurred.
   @available(iOS 13.0, macOS 10.15, watchOS 6.0, *)
@@ -45,6 +43,36 @@ extension View {
                                  perform action: @escaping (CGPoint) -> Void) -> some View {
     modifier(OnTouchDownGestureModifier(coordinateSpace: coordinateSpace,
                                         perform: action))
+  }
+  
+  /// Adds an action to perform when this view recognizes a tap gesture,
+  /// and provides the action with the location of the interaction.
+  ///
+  /// The action closure receives interaction.
+  ///
+  /// > Note: If you create a control that's functionally equivalent
+  /// to a ``Button``, use ``ButtonStyle`` to create a customized button
+  /// instead.
+  ///
+  ///
+  ///     struct DownTapGestureExample: View {
+  ///         var body: some View {
+  ///             Circle()
+  ///                 .frame(width: 100, height: 100, alignment: .center)
+  ///                 .onTouchDownGesture {
+  ///
+  ///                 }
+  ///         }
+  ///     }
+  ///
+  /// - Parameters:
+  ///    - action: The action to perform. This closure receives an input
+  ///      that indicates where the interaction occurred.
+  @available(iOS 15.0, macOS 12.0, *)
+  @available(watchOS, unavailable)
+  @available(tvOS, unavailable)
+  public func onTouchDownGesture(perform action: @escaping () -> Void) -> some View {
+    modifier(DownTapGestureModifier(perform: action))
   }
 }
 
