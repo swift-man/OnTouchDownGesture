@@ -21,18 +21,13 @@ extension DownTapGesture: NSViewRepresentable {
     return button
   }
   
-  func updateNSView(_ nsView: NSView, context: Context) {}
+  internal func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
 extension DownTapCoordniator {
   @objc
   internal func tapped(sender: NSButton) {
-    guard
-      let window = sender.window
-    else { return }
-    
-    let point = sender.convert(window.mouseLocationOutsideOfEventStream, from: nil)
-    performAction?(NSPointToCGPoint(point))
+    performAction?()
   }
 }
 

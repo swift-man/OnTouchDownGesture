@@ -7,10 +7,13 @@
 
 import SwiftUI
 
-internal struct OnTouchDownGestureModifier: ViewModifier {
-  private let perform: (CGPoint) -> Void
+@available(iOS 15.0, macOS 12.0, *)
+@available(watchOS, unavailable)
+@available(tvOS, unavailable)
+internal struct DownTapGestureModifier: ViewModifier {
+  private let perform: () -> Void
   
-  internal init(perform: @escaping (CGPoint) -> Void) {
+  internal init(perform: @escaping () -> Void) {
     self.perform = perform
   }
   
@@ -23,7 +26,7 @@ internal struct OnTouchDownGestureModifier: ViewModifier {
 }
 
 internal struct DownTapGesture {
-  internal let performAction: (CGPoint) -> Void
+  internal let performAction: () -> Void
   internal let downTapCoordniator = DownTapCoordniator()
   
   internal func makeCoordinator() -> DownTapCoordniator {
@@ -33,5 +36,5 @@ internal struct DownTapGesture {
 }
 
 internal final class DownTapCoordniator {
-  var performAction: ((CGPoint) -> Void)?
+  var performAction: (() -> Void)?
 }

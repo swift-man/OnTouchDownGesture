@@ -37,10 +37,71 @@ extension View {
   /// - Parameters:
   ///    - action: The action to perform. This closure receives an input
   ///      that indicates where the interaction occurred.
+  @available(iOS 13.0, macOS 10.15, watchOS 6.0, *)
+  @available(tvOS, unavailable)
+  public func onTouchDownGesture(coordinateSpace: CoordinateSpace = .local,
+                                 perform action: @escaping (CGPoint) -> Void) -> some View {
+    modifier(OnTouchDownGestureModifier(coordinateSpace: coordinateSpace,
+                                        perform: action))
+  }
+  
+  /// Adds an action to perform when this view recognizes a tap gesture,
+  /// and provides the action with the location of the interaction.
+  ///
+  /// The action closure receives interaction.
+  ///
+  /// > Note: If you create a control that's functionally equivalent
+  /// to a ``Button``, use ``ButtonStyle`` to create a customized button
+  /// instead.
+  ///
+  ///
+  ///     struct DownTapGestureExample: View {
+  ///         var body: some View {
+  ///             Circle()
+  ///                 .frame(width: 100, height: 100, alignment: .center)
+  ///                 .onTouchDownGesture {
+  ///
+  ///                 }
+  ///         }
+  ///     }
+  ///
+  /// - Parameters:
+  ///    - action: The action to perform. This closure receives an input
+  ///      that indicates where the interaction occurred.
   @available(iOS 15.0, macOS 12.0, *)
   @available(watchOS, unavailable)
   @available(tvOS, unavailable)
-  public func onTouchDownGesture(perform action: @escaping (CGPoint) -> Void) -> some View {
-    modifier(OnTouchDownGestureModifier(perform: action))
+  public func onTouchDownGesture(perform action: @escaping () -> Void) -> some View {
+    modifier(DownTapGestureModifier(perform: action))
+  }
+}
+
+fileprivate struct OnTouchDownGestureModifier: ViewModifier {
+  @State
+  private var isTapped = false
+  
+  private let coordinateSpace: CoordinateSpace
+  private let perform: (CGPoint) -> Void
+  
+  fileprivate init(coordinateSpace: CoordinateSpace = .local,
+                   perform: @escaping (CGPoint) -> Void) {
+    self.coordinateSpace = coordinateSpace
+    self.perform = perform
+  }
+  
+  fileprivate func body(content: Content) -> some View {
+    content
+      .gesture(DragGesture(minimumDistance: 0,
+                           coordinateSpace: coordinateSpace)
+        .onChanged { touch in
+          guard !self.isTapped else { return }
+          
+          self.isTapped = true
+          self.perform(touch.location)
+        }
+        .onEnded { _ in
+          self.isTapped = false
+        })
+      .disabled(isTapped)
   }
 }

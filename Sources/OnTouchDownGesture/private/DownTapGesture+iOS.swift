@@ -27,8 +27,7 @@ extension DownTapCoordniator {
   @objc
   internal func tapped(sender: UITouchDownGestureRecognizer) {
     if sender.state == .ended {
-      let point = sender.location(in: sender.view)
-      performAction?(point)
+      performAction?()
     }
   }
 }

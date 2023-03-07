@@ -6,8 +6,9 @@ import PackageDescription
 let package = Package(
     name: "OnTouchDownGesture",
     platforms: [
-      .iOS(.v15),
-      .macOS(.v12),
+      .iOS(.v13),
+      .macOS(.v10_15),
+      .watchOS(.v6)
     ],
     products: [
         .library(
